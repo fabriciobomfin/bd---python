@@ -9,9 +9,9 @@ class UsuarioService:
         try:
               usuario = Usuario(nome=nome, email=email, senha=senha)
               
-              novo_usuario = self.repository.pesquisar_usuario_por_email(usuario.email)
+              novo_usuario = self.repository.pesquisar_usuario(usuario.email)
 
-              if not novo_usuario:
+              if novo_usuario:
                 print("Usuário já cadastrrado no banco de dados. ")
                 return
         
@@ -23,5 +23,5 @@ class UsuarioService:
                 print(f"Ocorreu um erro inesperado: {erro}")
 
     def listar_todos_usuarios(self):
-         return self.repository.listar_usuarios()
+         return self.repository.listar_todos_usuario()
               
