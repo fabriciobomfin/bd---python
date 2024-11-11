@@ -1,5 +1,18 @@
-class Usuario:
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
+class Usuario(Base):
+    __tablename__ = 'usuarios'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nome = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
+    senha = Column(String, nullable=False)
+
     def __init__(self, nome, email, senha):
+        # Validando os dados antes de atribuir aos atributos
         self.nome = self._validar_nome(nome)
         self.email = self._validar_email(email)
         self.senha = self._validar_senha(senha)
