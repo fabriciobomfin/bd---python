@@ -26,3 +26,8 @@ Os dados precisam ser salvos no banco de dados.
 - Banco de dados: MySQL
 - Containerização: Docker
 - Orquestracão de contêineres: Docker Compose
+
+### Observação: 
+- s testes devem verificar os dados informados.
+- As exceções deve tratadas e exibidas para o usuário sem parar a execução do programa.
+- Utilize branches para versionamento.
