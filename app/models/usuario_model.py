@@ -27,14 +27,17 @@ class Usuario(Base):
         return nome
 
     def _validar_senha(self, senha: str):
-        
+        if not isinstance(senha, str):
+            raise TypeError("Senha inválida.") 
         if len(senha) < 6:
             raise ValueError("A senha deve ter pelo menos 6 caracteres.")
         return senha
+
     def _email_vazio(self, email: str):
-        if not email.strip():
-            raise ValueError("O campo email nao pode ficar vazio.")
+        if not isinstance(email, str) or not email.strip():
+            raise ValueError("O email não pode ser vazio.")
         return email
+
 
 
 Base.metadata.create_all(bind=db)

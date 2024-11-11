@@ -1,84 +1,97 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),' .. ')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from app.repositories.usuario_repository import UsuarioRepository
 from app.services.usuario_service import UsuarioService
-
 from config.database import Session
 
+def solicitar_dados_usuario(atualizando=False):
+    nome = input("Digite o nome do usuário: ") if not atualizando else input("Digite o novo nome (ou pressione Enter para manter): ")
+    email = input("Digite o e-mail do usuário: ") if not atualizando else None
+    senha = input("Digite a senha do usuário: ") if not atualizando else input("Digite a nova senha (ou pressione Enter para manter): ")
+    return nome, email, senha
+
 def main():
-    # Inicialização da sessão e das instâncias de repositório e serviço
     session = Session()
     repository = UsuarioRepository(session)
     service = UsuarioService(repository)
 
+    opcoes = {
+        "1": "Adicionar usuário",
+        "2": "Pesquisar um usuário",
+        "3": "Atualizar dados de um usuário",
+        "4": "Excluir um usuário",
+        "5": "Exibir todos os usuários cadastrados",
+        "0": "Sair"
+    }
+
     while True:
-        # Menu de opções
-        print("\nEscolha uma opção:")
-        print("1 - Adicionar usuário")
-        print("2 - Pesquisar um usuário")
-        print("3 - Atualizar dados de um usuário")
-        print("4 - Excluir um usuário")
-        print("5 - Exibir todos os usuários")
-        print("0 - Sair")
+        print("\n=== SENAI SOLUTION ===")
+        for key, value in opcoes.items():
+            print(f"{key} - {value}")
 
         opcao = input("Digite o número da opção desejada: ")
-        
+
         if opcao == "1":
-            
-            nome = input("Digite o nome do usuário: ")
-            email = input("Digite o e-mail do usuário: ")
-            senha = input("Digite a senha do usuário: ")
-            service.criar_usuario(nome=nome, email=email, senha=senha)
-        
+            nome, email, senha = solicitar_dados_usuario()
+            try:
+                service.criar_usuario(nome=nome, email=email, senha=senha)
+            except Exception as e:
+                print(f"Erro ao adicionar usuário: {e}")
+
         elif opcao == "2":
-            
             email = input("Digite o e-mail do usuário que deseja pesquisar: ")
-            usuario = repository.pesquisar_usuario(email)
-            if usuario:
-                print(f"Usuário encontrado - Nome: {usuario.nome} - Email: {usuario.email} - Senha: {usuario.senha}")
-            else:
-                print("Usuário não encontrado.")
-        
+            try:
+                usuario = repository.pesquisar_usuario(email)
+                if usuario:
+                    print(f"Usuário encontrado - Nome: {usuario.nome} - Email: {usuario.email}")
+                else:
+                    print("Usuário não encontrado.")
+            except Exception as e:
+                print(f"Erro ao pesquisar usuário: {e}")
+
         elif opcao == "3":
-            
             email = input("Digite o e-mail do usuário que deseja atualizar: ")
             usuario = repository.pesquisar_usuario(email)
             if usuario:
-                novo_nome = input("Digite o novo nome (ou pressione Enter para manter o nome atual): ")
-                nova_senha = input("Digite a nova senha (ou pressione Enter para manter a senha atual): ")
+                nome, _, senha = solicitar_dados_usuario(atualizando=True)
+                usuario.nome = nome if nome else usuario.nome
+                usuario.senha = senha if senha else usuario.senha
+                try:
+                    repository.salvar_usuario(usuario)
+                    print("Dados do usuário atualizados com sucesso!")
+                except Exception as e:
+                    print(f"Erro ao atualizar usuário: {e}")
+            else:
+                print("Usuário não encontrado.")
 
-                usuario.nome = novo_nome if novo_nome else usuario.nome
-                usuario.senha = nova_senha if nova_senha else usuario.senha
-                repository.salvar_usuario(usuario)
-                print("Dados do usuário atualizados com sucesso!")
-            else:
-                print("Usuário não encontrado.")
-        
         elif opcao == "4":
-           
             email = input("Digite o e-mail do usuário que deseja excluir: ")
-            usuario = repository.pesquisar_usuario(email)
-            if usuario:
-                repository.excluir_usuario(usuario)
-                print("Usuário excluído com sucesso!")
-            else:
-                print("Usuário não encontrado.")
-        
+            try:
+                usuario = repository.pesquisar_usuario(email)
+                if usuario:
+                    repository.excluir_usuario(usuario)
+                    print("Usuário excluído com sucesso!")
+                else:
+                    print("Usuário não encontrado.")
+            except Exception as e:
+                print(f"Erro ao excluir usuário: {e}")
+
         elif opcao == "5":
-            
-            print("\nListando todos os usuários cadastrados:")
-            lista_usuarios = repository.listar_todos_usuario()
-            if lista_usuarios:
-                for usuario in lista_usuarios:
-                    print(f"Nome: {usuario.nome} - Email: {usuario.email} - Senha: {usuario.senha}")
-            else:
-                print("Nenhum usuário cadastrado.")
-        
+            try:
+                usuarios = repository.listar_todos_usuarios()
+                if usuarios:
+                    print("\nLista de usuários cadastrados:")
+                    for usuario in usuarios:
+                        print(f"Nome: {usuario.nome} - Email: {usuario.email}")
+                else:
+                    print("Nenhum usuário cadastrado.")
+            except Exception as e:
+                print(f"Erro ao listar usuários: {e}")
+
         elif opcao == "0":
             print("Saindo do sistema...")
             break
-        
         else:
             print("Opção inválida. Tente novamente.")
 
