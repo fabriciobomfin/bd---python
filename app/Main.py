@@ -1,10 +1,9 @@
 import os
 import sys
-# Adiciona o diretório 'app' como diretório padrão.
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),' .. ')))
-
 from app.repositories.usuario_repository import UsuarioRepository
 from app.services.usuario_service import UsuarioService
+
 from config.database import Session
 
 def main():

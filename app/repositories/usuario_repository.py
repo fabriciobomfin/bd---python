@@ -22,6 +22,4 @@ class UsuarioRepository:
         return self.session.query(Usuario).all()
     
 
-    def atualizar_usuario(self, usuario: Usuario):
-     self.session.commit()
-     self.session.refresh(usuario)
+    
