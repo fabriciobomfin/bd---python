@@ -35,4 +35,3 @@ def test_tipo_email_invalido():
 def test_tipo_senha_invalida():
     with pytest.raises(TypeError, match="Senha inválida."):
         Usuario("Nome", "email@gmail.com", 12345)
- 
