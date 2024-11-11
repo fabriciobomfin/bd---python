@@ -1,7 +1,11 @@
-from services.usuario_service import UsuarioService
-from repositories.usuario_repository import UsuarioRepository
-from config.database import Session
 import os
+import sys
+# Adiciona o diretório 'app' como diretório padrão.
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__),' .. ')))
+
+from app.repositories.usuario_repository import UsuarioRepository
+from app.services.usuario_service import UsuarioService
+from config.database import Session
 
 def main():
     # Inicialização da sessão e das instâncias de repositório e serviço
@@ -22,14 +26,14 @@ def main():
         opcao = input("Digite o número da opção desejada: ")
         
         if opcao == "1":
-            # Adicionar novo usuário
+            
             nome = input("Digite o nome do usuário: ")
             email = input("Digite o e-mail do usuário: ")
             senha = input("Digite a senha do usuário: ")
             service.criar_usuario(nome=nome, email=email, senha=senha)
         
         elif opcao == "2":
-            # Pesquisar um usuário pelo email
+            
             email = input("Digite o e-mail do usuário que deseja pesquisar: ")
             usuario = repository.pesquisar_usuario(email)
             if usuario:
@@ -38,7 +42,7 @@ def main():
                 print("Usuário não encontrado.")
         
         elif opcao == "3":
-            # Atualizar dados de um usuário
+            
             email = input("Digite o e-mail do usuário que deseja atualizar: ")
             usuario = repository.pesquisar_usuario(email)
             if usuario:
@@ -53,7 +57,7 @@ def main():
                 print("Usuário não encontrado.")
         
         elif opcao == "4":
-            # Excluir um usuário pelo email
+           
             email = input("Digite o e-mail do usuário que deseja excluir: ")
             usuario = repository.pesquisar_usuario(email)
             if usuario:
@@ -63,7 +67,7 @@ def main():
                 print("Usuário não encontrado.")
         
         elif opcao == "5":
-            # Exibir todos os usuários cadastrados
+            
             print("\nListando todos os usuários cadastrados:")
             lista_usuarios = repository.listar_todos_usuario()
             if lista_usuarios:

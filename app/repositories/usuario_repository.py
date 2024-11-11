@@ -1,4 +1,4 @@
-from models.usuario_model import Usuario
+from app.models.usuario_model import Usuario
 from sqlalchemy.orm import Session
 
 class UsuarioRepository:
@@ -20,3 +20,8 @@ class UsuarioRepository:
 
     def listar_todos_usuario(self):
         return self.session.query(Usuario).all()
+    
+
+    def atualizar_usuario(self, usuario: Usuario):
+     self.session.commit()
+     self.session.refresh(usuario)
